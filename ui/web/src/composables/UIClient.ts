@@ -100,6 +100,16 @@ export class UIClient {
     this.ws?.addEventListener(event, listener, options)
   }
 
+  public async sendProcedureRequest (
+    procedureName: ProcedureName,
+    payload: Record<string, unknown>
+  ): Promise<ResponsePayload> {
+    // Log the payload
+    console.log(`Sending request for ${procedureName}`, payload)
+    // Call the internal sendRequest method
+    return this.sendRequest(procedureName, payload)
+  }
+
   public async sendStatusNotification (
     hashId: string,
     connectorId: number,
