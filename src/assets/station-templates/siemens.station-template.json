@@ -1,12 +1,12 @@
 {
   "idTagsFile": "idtags.json",
-  "baseName": "9ef9851b",
+  "baseName": "CS-SIEMENS",
   "fixedName": true,
   "chargePointModel": "SIEMENSXX213",
   "chargePointVendor": "SIEMENS",
   "power": 44160,
   "powerUnit": "W",
-  "numberOfConnectors": 1,
+  "numberOfConnectors": 2,
   "randomConnectors": false,
   "voltageOut": 240,
   "Configuration": {
@@ -61,7 +61,7 @@
   "Connectors": {
     "0": {},
     "1": {
-      "bootStatus": "Available",
+      "bootStatus": "Unavailable",
       "MeterValues": [
         {
           "unit": "Wh",
