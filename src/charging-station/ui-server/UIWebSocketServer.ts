@@ -124,9 +124,6 @@ export class UIWebSocketServer extends AbstractUIServer {
             return undefined
           })
           .catch(Constants.EMPTY_FUNCTION)
-          .finally(() => {
-            this.responseHandlers.delete(requestId)
-          })
       })
       ws.on('error', error => {
         logger.error(`${this.logPrefix(moduleName, 'start.ws.onerror')} WebSocket error:`, error)
