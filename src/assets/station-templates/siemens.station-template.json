@@ -1,15 +1,13 @@
 {
   "idTagsFile": "idtags.json",
-  "baseName": "9ef9851b",
+  "baseName": "CS-SIEMENS",
   "fixedName": true,
   "chargePointModel": "SIEMENSXX213",
   "chargePointVendor": "SIEMENS",
   "power": 44160,
   "powerUnit": "W",
-  "numberOfConnectors": 1,
+  "numberOfConnectors": 2,
   "randomConnectors": false,
-  "firmwareVersionPattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
-  "firmwareVersion": "3.3.0.10",
   "voltageOut": 240,
   "Configuration": {
     "configurationKey": [
@@ -63,7 +61,7 @@
   "Connectors": {
     "0": {},
     "1": {
-      "bootStatus": "Available",
+      "bootStatus": "Unavailable",
       "MeterValues": [
         {
           "unit": "Wh",

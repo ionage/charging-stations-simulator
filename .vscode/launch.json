@@ -12,8 +12,7 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "start:dev:debug"],
       "skipFiles": ["<node_internals>/**"],
-      "stopOnEntry": true,
-      "sourceMaps": true
+      "stopOnEntry": true
     },
     {
       "name": "Debug Simulator Unit Tests",
@@ -24,8 +23,7 @@
       "autoAttachChildProcesses": false,
       "timeout": 30000,
       "resolveSourceMapLocations": ["!**/node_modules/**"],
-      "skipFiles": ["<node_internals>/**"],
-      "sourceMaps": true
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }
