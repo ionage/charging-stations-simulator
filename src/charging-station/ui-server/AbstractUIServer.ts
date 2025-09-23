@@ -84,10 +84,6 @@ export abstract class AbstractUIServer {
     return this.responseHandlers.has(uuid)
   }
 
-  public deleteResponseHandler (uuid: `${string}-${string}-${string}-${string}-${string}`) {
-    this.responseHandlers.delete(uuid)
-  }
-
   public abstract logPrefix (moduleName?: string, methodName?: string, prefixSuffix?: string): string
 
   public async sendInternalRequest (request: ProtocolRequest): Promise<ProtocolResponse> {

@@ -190,7 +190,6 @@ export abstract class AbstractUIService {
   ): void {
     if (this.uiServer.hasResponseHandler(uuid)) {
       this.uiServer.sendResponse(this.uiServer.buildProtocolResponse(uuid, responsePayload))
-      this.uiServer.deleteResponseHandler(uuid)
     } else {
       logger.warn(`${this.logPrefix(moduleName, 'sendResponse')} Response handler not found:`, {
         responsePayload,
