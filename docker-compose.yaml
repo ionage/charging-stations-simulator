@@ -1,0 +1,42 @@
+networks:
+  ev_network:
+    driver: bridge
+
+services:
+  e-mobility-charging-stations-simulator:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        STACK_TRACE_LIMIT: 1024
+        MAX_OLD_SPACE_SIZE: 768
+    networks:
+      - ev_network
+    expose:
+      - '8080'
+    container_name: emobility-backend
+
+  e-mobility-charging-stations-dashboard:
+    build:
+      context: ui/web
+      dockerfile: docker/Dockerfile
+    networks:
+      - ev_network
+    expose:
+      - '3030'
+    container_name: emobility-frontend
+    depends_on:
+      - e-mobility-charging-stations-simulator
+
+  nginx:
+    image: nginx:alpine
+    container_name: reverse-proxy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - '8080:8080'
+    networks:
+      - ev_network
+    depends_on:
+      - e-mobility-charging-stations-simulator
+      - e-mobility-charging-stations-dashboard
