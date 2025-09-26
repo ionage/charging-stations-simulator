@@ -1295,7 +1295,7 @@ export class ChargingStation extends EventEmitter {
   }
 
   private getStationInfo (options?: ChargingStationOptions): ChargingStationInfo {
-    const stationInfoFromTemplate = this.getStationInfoFromTemplate()
+    const stationInfoFromTemplate = this.getStationInfoFromTemplate(options)
     options?.persistentConfiguration != null &&
       (stationInfoFromTemplate.stationInfoPersistentConfiguration = options.persistentConfiguration)
     const stationInfoFromFile = this.getStationInfoFromFile(
@@ -1341,7 +1341,7 @@ export class ChargingStation extends EventEmitter {
     return stationInfo
   }
 
-  private getStationInfoFromTemplate (): ChargingStationInfo {
+  private getStationInfoFromTemplate (options?: ChargingStationOptions): ChargingStationInfo {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const stationTemplate = this.getTemplateFromFile()!
     checkTemplate(stationTemplate, this.logPrefix(), this.templateFile)
@@ -1351,7 +1351,7 @@ export class ChargingStation extends EventEmitter {
       checkConnectorsConfiguration(stationTemplate, this.logPrefix(), this.templateFile)
     }
     const stationInfo = stationTemplateToStationInfo(stationTemplate)
-    stationInfo.hashId = getHashId(this.index, stationTemplate)
+    stationInfo.hashId = getHashId(this.index, stationTemplate, options)
     stationInfo.templateIndex = this.index
     stationInfo.templateName = buildTemplateName(this.templateFile)
     stationInfo.chargingStationId = getChargingStationId(this.index, stationTemplate)
@@ -1522,7 +1522,7 @@ export class ChargingStation extends EventEmitter {
     checkTemplate(stationTemplate, this.logPrefix(), this.templateFile)
     this.configurationFile = join(
       dirname(this.templateFile.replace('station-templates', 'configurations')),
-      `${getHashId(this.index, stationTemplate)}.json`
+      `${getHashId(this.index, stationTemplate, options)}.json`
     )
     const stationConfiguration = this.getConfigurationFromFile()
     if (
@@ -1535,6 +1535,21 @@ export class ChargingStation extends EventEmitter {
       this.initializeConnectorsOrEvsesFromTemplate(stationTemplate)
     }
     this.stationInfo = this.getStationInfo(options)
+    // If UI passed supervisionUrls (built from customHost+customPath), prefer that.
+    if (options?.supervisionUrls) {
+      const supervisionUrl =
+        Array.isArray(options.supervisionUrls) && options.supervisionUrls.length > 0
+          ? options.supervisionUrls[0]
+          : (options.supervisionUrls as string)
+      if (typeof supervisionUrl === 'string' && supervisionUrl.length > 0) {
+        ;(this.stationInfo as any).supervisionUrl = supervisionUrl
+      }
+    }
+    // If UI passed a chargerId, use it as the station's chargingStationId / baseName
+    if (typeof (options as ChargingStationOptions | undefined)?.chargerId === 'string' && (options as ChargingStationOptions).chargerId!.length > 0) {
+      ;(this.stationInfo as any).chargingStationId = (options as ChargingStationOptions).chargerId
+      ;(this.stationInfo as any).baseName = (options as ChargingStationOptions).chargerId
+    }
     validateStationInfo(this)
     if (
       this.stationInfo.firmwareStatus === FirmwareStatus.Installing &&
