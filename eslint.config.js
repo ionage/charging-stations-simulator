@@ -1,5 +1,5 @@
-/* eslint-disable n/no-unpublished-import */
 import cspellConfigs from '@cspell/eslint-plugin/configs'
+/* eslint-disable n/no-unpublished-import */
 import js from '@eslint/js'
 import jsdoc from 'eslint-plugin-jsdoc'
 import perfectionist from 'eslint-plugin-perfectionist'
@@ -17,7 +17,7 @@ export default defineConfig([
       '@cspell/spellchecker': [
         'warn',
         {
-          autoFix: true,
+          autoFix: false,
           cspell: {
             words: [
               'DECI',
