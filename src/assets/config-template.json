@@ -24,27 +24,5 @@
       "password": "admin"
     }
   },
-  "stationTemplateUrls": [
-    {
-      "file": "siemens.station-template.json",
-      "numberOfStations": 1
-    },
-    {
-      "file": "keba.station-template.json",
-      "numberOfStations": 2,
-      "provisionedNumberOfStations": 2
-    },
-    {
-      "file": "abb.station-template.json",
-      "numberOfStations": 2
-    },
-    {
-      "file": "evlink.station-template.json",
-      "numberOfStations": 4
-    },
-    {
-      "file": "schneider.station-template.json",
-      "numberOfStations": 1
-    }
-  ]
+  "stationTemplateUrls": []
 }
