@@ -154,7 +154,7 @@ export const getNumberOfReservableConnectors = (
   return numberOfReservableConnectors
 }
 
-export const getHashId = (index: number, stationTemplate: ChargingStationTemplate): string => {
+export const getHashId = (index: number, stationTemplate: ChargingStationTemplate, options?: ChargingStationOptions): string => {
   const chargingStationInfo = {
     chargePointModel: stationTemplate.chargePointModel,
     chargePointVendor: stationTemplate.chargePointVendor,
@@ -170,10 +170,12 @@ export const getHashId = (index: number, stationTemplate: ChargingStationTemplat
     ...(stationTemplate.meterType != null && {
       meterType: stationTemplate.meterType,
     }),
+    // add chargerId from options if provided
+    ...(options?.chargerId != null && { customChargerId: options.chargerId }),
   }
   return hash(
     Constants.DEFAULT_HASH_ALGORITHM,
-    `${JSON.stringify(chargingStationInfo)}${getChargingStationId(index, stationTemplate)}`,
+    `${JSON.stringify(chargingStationInfo)}${getChargingStationId(index, stationTemplate, options)}`,
     'hex'
   )
 }
