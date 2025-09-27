@@ -17,7 +17,7 @@ import {
   toDate,
 } from 'date-fns'
 import { maxTime } from 'date-fns/constants'
-import { hash, randomBytes } from 'node:crypto'
+import { createHash, hash, randomBytes, randomUUID } from 'node:crypto'
 import { basename, dirname, isAbsolute, join, parse, relative, resolve } from 'node:path'
 import { env } from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -154,7 +154,8 @@ export const getNumberOfReservableConnectors = (
   return numberOfReservableConnectors
 }
 
-export const getHashId = (index: number, stationTemplate: ChargingStationTemplate): string => {
+export const getHashId = (index: number, stationTemplate: ChargingStationTemplate,
+  options?: ChargingStationOptions): string => {
   const chargingStationInfo = {
     chargePointModel: stationTemplate.chargePointModel,
     chargePointVendor: stationTemplate.chargePointVendor,
@@ -170,12 +171,15 @@ export const getHashId = (index: number, stationTemplate: ChargingStationTemplat
     ...(stationTemplate.meterType != null && {
       meterType: stationTemplate.meterType,
     }),
+    // include chargerId if provided
+    ...(options?.chargerId != null && { chargerId: options.chargerId }),
   }
-  return hash(
-    Constants.DEFAULT_HASH_ALGORITHM,
-    `${JSON.stringify(chargingStationInfo)}${getChargingStationId(index, stationTemplate)}`,
-    'hex'
-  )
+  const baseString = `${JSON.stringify(chargingStationInfo)}${getChargingStationId(index, stationTemplate)}`
+  // If no chargerId provided, append a random UUID to ensure uniqueness
+  const uniqueness = options?.chargerId ?? randomUUID()
+  return createHash(Constants.DEFAULT_HASH_ALGORITHM)
+    .update(`${baseString}-${uniqueness}`)
+    .digest('hex')
 }
 
 export const validateStationInfo = (chargingStation: ChargingStation): void => {

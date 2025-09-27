@@ -40,6 +40,7 @@ export interface ChargingStationOptions extends JsonObject {
   persistentConfiguration?: boolean
   stopTransactionsOnStopped?: boolean
   supervisionUrls?: string | string[]
+  chargerId?: string
 }
 
 export interface ChargingStationWorkerData extends WorkerData {
