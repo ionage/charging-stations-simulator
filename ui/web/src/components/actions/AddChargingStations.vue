@@ -30,9 +30,21 @@
     placeholder="number of stations"
     type="number"
   >
+
   <p>Template options overrides:</p>
   <ul id="template-options">
     <li>
+      <label>
+        <input
+          v-model="state.isCustom"
+          type="checkbox"
+        >
+        Add custom charger
+      </label>
+    </li>
+
+    <!-- Show normal supervisionUrl if not custom -->
+    <li v-if="!state.isCustom">
       Supervision url:
       <input
         id="supervision-url"
@@ -42,6 +54,38 @@
         type="url"
       >
     </li>
+
+    <!-- Show custom charger fields if checkbox enabled -->
+    <template v-else>
+      <li>
+        Host:
+        <input
+          v-model.trim="state.customHost"
+          name="custom-host"
+          placeholder="ws://localhost:8010"
+          type="text"
+        >
+      </li>
+      <li>
+        Path (optional):
+        <input
+          v-model.trim="state.customPath"
+          name="custom-path"
+          placeholder="/ocpp"
+          type="text"
+        >
+      </li>
+      <li>
+        Charger ID / Name:
+        <input
+          v-model.trim="state.customChargerId"
+          name="custom-chargerid"
+          placeholder="CS-MYCHARGER-001"
+          type="text"
+        >
+      </li>
+    </template>
+
     <li>
       Auto start:
       <input
@@ -86,7 +130,10 @@
       () => {
         $uiClient
           ?.addChargingStations(state.template, state.numberOfStations, {
-            supervisionUrls: state.supervisionUrl.length > 0 ? state.supervisionUrl : undefined,
+            supervisionUrls: state.isCustom
+              ? `${state.customHost}${state.customPath || ''}`
+              : (state.supervisionUrl.length > 0 ? state.supervisionUrl : undefined),
+            chargerId: state.isCustom ? state.customChargerId : undefined,
             autoStart: convertToBoolean(state.autoStart),
             persistentConfiguration: convertToBoolean(state.persistentConfiguration),
             ocppStrictCompliance: convertToBoolean(state.ocppStrictCompliance),
@@ -124,6 +171,10 @@ const state = ref<{
   renderTemplates: `${string}-${string}-${string}-${string}-${string}`
   supervisionUrl: string
   template: string
+  isCustom: boolean
+  customHost: string
+  customPath: string
+  customChargerId: string
 }>({
   autoStart: false,
   enableStatistics: false,
@@ -133,6 +184,10 @@ const state = ref<{
   renderTemplates: randomUUID(),
   supervisionUrl: '',
   template: '',
+  isCustom: false,
+  customHost: '',
+  customPath: '',
+  customChargerId: '',
 })
 
 watch(getCurrentInstance()!.appContext.config.globalProperties!.$templates, () => {
@@ -146,7 +201,10 @@ watch(getCurrentInstance()!.appContext.config.globalProperties!.$templates, () =
   text-align: center;
 }
 
-#supervision-url {
+#supervision-url,
+#custom-host,
+#custom-path,
+#custom-chargerid {
   width: 90%;
   text-align: left;
 }
